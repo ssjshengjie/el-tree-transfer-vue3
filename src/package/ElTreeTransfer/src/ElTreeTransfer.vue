@@ -158,7 +158,7 @@ export default defineComponent({
         remData.filter((item) => {
           return item.children == null || !item.children ? void (0) : res.push(item)
         })
-        emit('addBtn', res)
+        emit('removeBtn', res)
       }
       checkAllToDataCache.value = []
     }
