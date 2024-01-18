@@ -35,7 +35,7 @@ el-tree-fransfer-vue3 是一个基于 VUE3 和 elementPlus 的树形穿梭框组
 </template>
 <script lang='ts' setup>
 import { ref } from 'vue'
-import ElTreeTransferCom from 'el-tree-transfer-vue3'
+import ElTreeTransfer from 'el-tree-transfer-vue3'
 import 'el-tree-transfer-vue3/dist/style.css'
 import { transferData } from './data'
 const fromData = ref(transferData.ruleInfo.diff)

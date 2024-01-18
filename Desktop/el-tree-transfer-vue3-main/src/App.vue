@@ -6,7 +6,7 @@
 </template>
 <script lang='ts' setup>
 import { ref } from 'vue'
-import ElTreeTransfer from './package/ElTreeTransfer'
+import ElTreeTransfer from 'el-tree-transfer-vue3'
 import { transferData } from './data'
 const fromData = ref(transferData.ruleInfo.diff)
 const toData = ref(transferData.ruleInfo.auth)

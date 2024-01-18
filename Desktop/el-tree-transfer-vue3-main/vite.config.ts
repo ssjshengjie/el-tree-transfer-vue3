@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [vue(), vueJsx(),],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/package/ElTreeTransferV2/index.ts"),
+      entry: path.resolve(__dirname, "src/package/ElTreeTransfer"),
       name: "el-tree-transfer-vue3",
       fileName: (format) => `el-tree-transfer-vue3.${format}.ts`,
     },
