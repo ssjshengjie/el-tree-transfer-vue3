@@ -1,105 +1,63 @@
 
-  <template>
+<template>
   <div class="mint-transfer transfer" :style="{ width, height }">
     <!-- 穿梭框 左侧 -->
     <div class="transfer-left">
       <div class="transfer-left-title">
-        <el-checkbox
-          v-model="fromChekAll"
-          :indeterminate="isFromIndeterminate"
-          @change="fromHandleCheckAllChange"
-        />
+        <el-checkbox v-model="fromChekAll" :indeterminate="isFromIndeterminate" @change="fromHandleCheckAllChange" />
         <span>{{ $props.from_title || '' }}</span>
       </div>
       <!-- 左侧内容区 -->
       <div class="transfer-left-content">
         <el-scrollbar height="100%">
-          <el-input
-            class="transfer-input"
-            v-model="fromFilterText"
-            placeholder="输入关键字进行过滤"
-            clearable
-          />
-          <el-tree
-            style="padding-left: 10px;"
-            :data="$props.from_data"
-            :props="$props.defaultProps"
-            show-checkbox
-            :node-key="$props.node_key"
-            current-node-key="current"
-            ref="fromtree"
-            @check="fromCheck"
-            :filter-node-method="fromFilterNode"
-            @node-click="fromHandleNodeClick"
-          />
+          <el-input class="transfer-input" v-model="fromFilterText" placeholder="输入关键字进行过滤" clearable />
+          <el-tree style="padding-left: 10px;" :data="$props.from_data" :props="$props.defaultProps" show-checkbox
+            :node-key="$props.node_key" current-node-key="current" ref="fromtree" @check="fromCheck"
+            :filter-node-method="fromFilterNode" @node-click="fromHandleNodeClick" />
         </el-scrollbar>
       </div>
     </div>
     <div class="transfer-button">
       <div class="transfer-button-add">
-        <el-button
-          size="small"
-          type="primary"
-          :disabled="checkAllFromDataCache.length > 0 ? false : true"
-          @click="add"
-        >{{ "添加" }}</el-button>
+        <el-button size="small" type="primary" :disabled="checkAllFromDataCache.length > 0 ? false : true" @click="add">{{
+          "添加" }}</el-button>
       </div>
       <div class="transfer-button-remove">
-        <el-button
-          size="small"
-          type="primary"
-          :disabled="checkAllToDataCache.length > 0 ? false : true"
-          @click="remove"
-        >{{ "移除" }}</el-button>
+        <el-button size="small" type="primary" :disabled="checkAllToDataCache.length > 0 ? false : true"
+          @click="remove">{{ "移除" }}</el-button>
       </div>
     </div>
     <!-- 穿梭框 右侧 -->
     <div class="transfer-right">
       <div class="transfer-right-title">
-        <el-checkbox
-          v-model="toChekAll"
-          :indeterminate="isToIndeterminate"
-          @change="toHandleCheckAllChange"
-        />
+        <el-checkbox v-model="toChekAll" :indeterminate="isToIndeterminate" @change="toHandleCheckAllChange" />
         <span>{{ $props.to_title || '' }}</span>
       </div>
       <!-- 右侧内容区 -->
       <div class="transfer-right-content">
         <el-scrollbar height="100%">
-          <el-input
-            class="transfer-input"
-            v-model="toFilterText"
-            placeholder="输入关键字进行过滤"
-            clearable
-          />
-          <el-tree
-            style="padding-left: 10px;"
-            :data="$props.to_data"
-            :props="$props.defaultProps"
-            show-checkbox
-            :node-key="$props.node_key"
-            ref="totree"
-            @check="toCheck"
-            :filter-node-method="toFilterNode"
-            @node-click="toHandleNodeClick"
-          />
+          <el-input class="transfer-input" v-model="toFilterText" placeholder="输入关键字进行过滤" clearable />
+          <el-tree style="padding-left: 10px;" :data="$props.to_data" :props="$props.defaultProps" show-checkbox
+            :node-key="$props.node_key" ref="totree" @check="toCheck" :filter-node-method="toFilterNode"
+            @node-click="toHandleNodeClick" />
         </el-scrollbar>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
+import { ElTree } from 'element-plus'
 import { defineComponent, ref, watch } from 'vue'
 import { props } from './props'
-import { convertTreeData, deepClone, spanningTree, filterPid, dynamicDeletion } from './utils'
+import { convertTreeData, deepClone, dynamicDeletion, filterPid, spanningTree } from './utils'
 export default defineComponent({
-  name:'el-tree-transfer',
+  name: 'el-tree-transfer',
   props,
   setup(props, { emit }) {
     //fromtree节点
-    const fromtree = ref()
+    const fromtree = ref<InstanceType<typeof ElTree>>()
     //totree节点
-    const totree = ref()
+    const totree = ref<InstanceType<typeof ElTree>>()
     //过滤的值
     const fromFilterText = ref('')
     const toFilterText = ref('')
@@ -171,32 +129,32 @@ export default defineComponent({
     //fromdata 全选
     const fromHandleCheckAllChange = (val: boolean) => {
       if (val) {
-        fromtree.value.setCheckedNodes(props.from_data)
-        const key = fromtree.value.getCheckedNodes()
+        fromtree.value!.setCheckedNodes(props.from_data as any, false)
+        const key = fromtree.value!.getCheckedNodes(false, false)
         const arr = filterPid(deepClone(key), 0)
         checkAllFromDataCache.value = convertTreeData(arr)
       } else {
-        fromtree.value.setCheckedNodes([])
-        const key = fromtree.value.getCheckedNodes()
+        fromtree.value!.setCheckedNodes([], false)
+        const key = fromtree.value!.getCheckedNodes(false, false)
         checkAllFromDataCache.value = key
       }
     }
     //todata 全选
     const toHandleCheckAllChange = (val: boolean) => {
       if (val) {
-        totree.value.setCheckedNodes(props.to_data)
-        const key = totree.value.getCheckedNodes()
+        totree.value!.setCheckedNodes(props.to_data as any, false)
+        const key = totree.value!.getCheckedNodes(false, false)
         const arr = filterPid(deepClone(key), 0)
         checkAllToDataCache.value = arr
       } else {
-        totree.value.setCheckedNodes([])
-        const key = totree.value.getCheckedNodes()
+        totree.value!.setCheckedNodes([], false)
+        const key = totree.value!.getCheckedNodes(false, false)
         checkAllToDataCache.value = key
       }
     }
     // 树节点点击 节点选择
     const fromCheck = () => {
-      const key = fromtree.value.getCheckedNodes(false, true)
+      const key = fromtree.value!.getCheckedNodes(false, true)
       //克隆防止改变源数据 由于 getCheckedNodes 设置 第二参数 true 会 自动获取父节点 及所有children 需要过滤一波 | 也可以 扁平化之后再过滤
       const arr = filterPid(deepClone(key), 0)
       //为了方便 遍历 和 对比差异 扁平化 转成一维数组 好循环 查找 
@@ -204,7 +162,7 @@ export default defineComponent({
       console.error(checkAllFromDataCache.value)
     }
     const toCheck = () => {
-      const key = totree.value.getCheckedNodes(false, true)
+      const key = totree.value!.getCheckedNodes(false, true)
       const arr = filterPid(deepClone(key), 0)
       checkAllToDataCache.value = convertTreeData(arr)
     }
@@ -256,10 +214,10 @@ export default defineComponent({
       }
     })
     watch(() => fromFilterText.value, (newValue) => {
-      fromtree.value.filter(newValue)
+      fromtree.value!.filter(newValue)
     })
     watch(() => toFilterText.value, (newValue) => {
-      totree.value.filter(newValue)
+      totree.value!.filter(newValue)
     })
     return {
       fromChekAll,
@@ -292,16 +250,19 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   display: flex;
+
   // border: 1px solid #ebeef5;
   .transfer-left,
   .transfer-right {
     flex: 1;
   }
+
   .transfer-button {
     flex-basis: 100px;
     width: 100%;
     height: 100%;
   }
+
   .transfer-left,
   .transfer-right {
     width: 100%;
@@ -309,11 +270,13 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     border: 1px solid #ebeef5;
+
     .transfer-left-title,
     .transfer-right-title {
       background: #f5f7fa;
       padding-left: 15px;
       border-bottom: 1px solid #ebeef5;
+
       span {
         padding-left: 15px;
         font-size: 15px;
@@ -321,32 +284,39 @@ export default defineComponent({
         font-weight: 400;
       }
     }
+
     .transfer-left-content,
     .transfer-right-content {
       height: 100%;
       width: 100%;
       background: #ffffff;
+
       .transfer-input {
         padding: 10px;
       }
+
       .el-scrollbar__wrap {
         .el-scrollbar__view {
           height: 100%;
         }
       }
+
       .el-tree {
         height: 100%;
       }
     }
   }
+
   .transfer-button {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     .transfer-button-add {
       margin-bottom: 5px;
     }
+
     .transfer-button-remove {
       margin-top: 5px;
     }
