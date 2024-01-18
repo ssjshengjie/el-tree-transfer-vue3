@@ -1,0 +1,275 @@
+# el-tree-transfer-vue3
+
+## 简介
+v1.0.0
+el-tree-fransfer-vue3 是一个基于 VUE3 和 elementPlus 的树形穿梭框组件，使用前请确认已经引入[element-plus](https://element-plus.org/zh-CN/guide/installation.html)！
+此组件功能类似于`element-plus`的[transfer](https://element-plus.org/zh-CN/component/transfer.html)组件，但是里面的数据是树形结构！
+实际上，el-tree-transfer 依赖的 element-plus 组件分别是[Checkbox 多选框](https://element-plus.org/zh-CN/component/checkbox.html)，[Button 按钮](https://element-plus.org/zh-CN/component/button.html)，和最主要的[Tree 树形控件](https://element-plus.org/zh-CN/component/tree.html)写成！参考了借鉴 vue2 版本`el-tree-transfer`(https://www.npmjs.com/package/el-tree-transfer)
+
+## 快速上手
+
+> 先 npm 下载插件
+
+`npm install el-tree-transfer-vue3 --save`
+
+或
+
+`npm i el-tree-transfer-vue3 -S`
+
+> 然后你可以像使用普通组件一样使用 el-tree-transfer
+
+```js
+   <template>
+  <div class="text-tree-transfer">
+    <ElTreeTransfer
+      width="800px"
+      height="500px"
+      from_title="测试"
+      to_title="到测试"
+      v-model:from_data="fromData"
+      v-model:to_data="toData"
+      @addBtn="addBtn"
+      @removeBtn="removeBtn"
+    />
+  </div>
+</template>
+<script lang='ts' setup>
+import { ref } from 'vue'
+import ElTreeTransferCom from 'el-tree-transfer-vue3'
+import 'el-tree-transfer-vue3/dist/style.css'
+import { transferData } from './data'
+const fromData = ref(transferData.ruleInfo.diff)
+const toData = ref(transferData.ruleInfo.auth)
+const addBtn = (v: any) => {
+  fromData.value = v
+}
+const removeBtn = (v: any) => {
+  toData.value = v
+}
+</script>
+
+<style lang="scss">
+</style>
+```
+###
+目前 还不是很完善
+<!-- ## 文档
+
+| 序号 | 参数                                                    | 说明                                                                         | 类型                                   | 默认值                                                                                                                                                                                                                                                                                                                                                                                                  | 补充                                                                                                                                                                                                                               |
+| ---- | ------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ----------------------------------------- |
+| 1    | width                                                   | 宽度                                                                         | String                                 | 100%                                                                                                                                                                                                                                                                                                                                                                                                    | 建议在外部盒子设定宽度和位置                                                                                                                                                                                                       |
+| 2    | height                                                  | 高度                                                                         | String                                 | 320px                                                                                                                                                                                                                                                                                                                                                                                                   | -                                                                                                                                                                                                                                  |
+| 3    | title                                                   | 标题                                                                         | String                                 | ["源列表", "目标列表"]                                                                                                                                                                                                                                                                                                                                                                                  | -                                                                                                                                                                                                                                  |
+| 4    | button_text                                             | 按钮名字                                                                     | Array                                  | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  |
+| 5    | from_data                                               | 源数据                                                                       | Array                                  | -                                                                                                                                                                                                                                                                                                                                                                                                       | 数据格式同 element-ui tree 组件，但必须有 id 和 pid                                                                                                                                                                                |
+| 6    | to_data                                                 | 目标数据                                                                     | Array                                  | -                                                                                                                                                                                                                                                                                                                                                                                                       | 数据格式同 element-ui tree 组件，但必须有 id 和 pid                                                                                                                                                                                |
+| 7    | defaultProps                                            | 配置项-同 el-tree 中 props                                                   | Object                                 | { label: "label", children: "children", isLeaf: "leaf", disable: "disable" }                                                                                                                                                                                                                                                                                                                            | 用法和 el-tree 的 props 一样                                                                                                                                                                                                       |
+| 8    | node_key                                                | 自定义 node-key 的值，默认为 id                                              | String                                 | id                                                                                                                                                                                                                                                                                                                                                                                                      | 必须与 treedata 数据内的 id 参数名一致，必须唯一                                                                                                                                                                                   |
+| 9    | pid                                                     | 自定义 pid 的参数名，默认为"pid"                                             | String                                 | pid                                                                                                                                                                                                                                                                                                                                                                                                     | 有网友提出后台给的字段名不叫 pid，因此增加自定义支持                                                                                                                                                                               |
+| 10   | leafOnly                                                | 废弃                                                                         | -                                      | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  |
+| 11   | filter                                                  | 是否开启筛选功能                                                             | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | 根据 defaultProps 参数的 label 字段筛选                                                                                                                                                                                            |
+| 12   | openAll                                                 | 是否默认展开全部                                                             | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | 存在性能问题                                                                                                                                                                                                                       |
+| 13   | ~~renderContent~~ renderContentLeft, renderContentRight | 自定义树节点， 用法同 element-ui tree                                        | Function                               | -                                                                                                                                                                                                                                                                                                                                                                                                       | 2.2.3 版本拆为两个函数分别定义左右两侧自定义节点                                                                                                                                                                                   |
+| 14   | mode                                                    | 设置穿梭框模式                                                               | String                                 | transfer                                                                                                                                                                                                                                                                                                                                                                                                | mode 默认为 transfer 模式，即树形穿梭框模式，可配置字段为 addressList 改为通讯录模式，通讯录模式时按钮不可自定义名字，如要自定义标题名在 title 数组传入四个值即可，addressList 模式时标题默认为通讯录、收件人、抄送人、密送人      |
+| 15   | transferOpenNode                                        | 穿梭后是否展开穿梭的节点                                                     | Boolean                                | true                                                                                                                                                                                                                                                                                                                                                                                                    | 默认为 true 即展开穿梭的节点，便于视觉查看，增加此参数是因为数据量大时展开会有明显卡顿问题，但注意，如此参数设置为 false 则穿梭后不展开，毕竟无法确定第几层就会有庞大数据                                                          |
+| 16   | defaultCheckedKeys                                      | 默认选中节点                                                                 | Array                                  | false                                                                                                                                                                                                                                                                                                                                                                                                   | 只匹配初始时默认节点，不会在你操作后动态改变默认节点                                                                                                                                                                               |
+| 17   | placeholder                                             | 设置搜索框提示语                                                             | String                                 | 输入关键词进行筛选                                                                                                                                                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                  |
+| 18   | defaultTransfer                                         | 是否自动穿梭一次默认选中 defaultCheckedKeys 的节点                           | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | 用来满足用户不想将数据拆分成 fromData 和 toData 的需求                                                                                                                                                                             |
+| 19   | arrayToTree                                             | 是否开启一维数组转化为树形结构                                               | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | 数据必须存在根节点，并且不会断节，数据格式详见 github 上 app.vue，根据 id、pid 对应关系转化，存在一定的性能问题                                                                                                                    |
+| 20   | addressOptions                                          | 通讯录模式配置项                                                             | Object                                 | {num: Number, suffix: String, connector: String}                                                                                                                                                                                                                                                                                                                                                        | num-> 所需右侧通讯录个数,默认 3 suffix-> label 后想要拼接的字段（如 id，即取此条数据的 id 拼接在后方）默认 suffix connector -> 连接符（字符串）默认-                                                                               |
+| 21   | lazy                                                    | 是否启用懒加载                                                               | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | 效果动 el-tree 懒加载，不可和 openAll 或默认展开同时使用                                                                                                                                                                           |
+| 22   | lazyFn                                                  | 懒加载的回调函数                                                             | Function                               | -                                                                                                                                                                                                                                                                                                                                                                                                       | 当适用 lazy 时必须传入回调函数，示例:lazyFn='loadNode',返回参数 loadNode(node, resolve, from), node->当前展开节点 node，resolve->懒加载 resolve，from -> left/right 表示回调来自左侧/右侧                                          |
+| 23   | high-light                                              | 是否高亮当前选中节点                                                         | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | -                                                                                                                                                                                                                                  |
+| 24   | filterNode                                              | 自定义搜索函数                                                               | Function                               | -                                                                                                                                                                                                                                                                                                                                                                                                       | 不传则仍默认根据 defaultProps 参数的 label 字段筛选                                                                                                                                                                                |
+| 25   | defaultExpandedKeys                                     | 默认展开节点                                                                 | Array                                  | -                                                                                                                                                                                                                                                                                                                                                                                                       | 要展开的节点 id 数组，会自动去重生效在左右两侧                                                                                                                                                                                     |
+| 26   | lazyRight                                               | 2.2.9 版本 lazy 属性只对左侧树生效，如果需要右侧也是用懒加载->lazyRight      | Boolean                                | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  | -   |
+| 27   | sjr                                                     | 通讯录模式，设置右侧收件人数据                                               | Array                                  | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  |
+| 28   | csr                                                     | 通讯录模式，设置右侧抄送人数据                                               | Array                                  | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  |
+| 29   | msr                                                     | 通讯录模式，设置右侧密送人数据                                               | Array                                  | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  |
+| 30   | rootPidValue                                            | 穿梭框模式，根节点数据 pid 的值，用于匹配退出循环，重要                      | String,Number                          | 0                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  | -   | 插件不再强制将你的数据根节点 pid 都改为 0 |
+| 31   | checkStrictly                                           | 是否父子不关联                                                               | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | 此模式不支持 lazy，返回的 fromData 和 toData 是最新数据，obj 里面的 keys，nodes 不完整。且对删空子节点后的父节点左右两边处理逻辑有差异：当授权时既然要在右边出现，必然需要左侧父节点，而删除授权时，移除子权限并不代表想移除父权限 |
+| 32   | renderAfterExpand                                       | 是否在第一次展开某个树节点后才渲染其子节点                                   | Boolean                                | true                                                                                                                                                                                                                                                                                                                                                                                                    | -                                                                                                                                                                                                                                  |
+| 33   | expandOnClickNode                                       | 是否在点击节点的时候展开或者收缩节点                                         | Boolean                                | true                                                                                                                                                                                                                                                                                                                                                                                                    | -                                                                                                                                                                                                                                  |
+| 34   | checkOnClickNode                                        | 是否在点击节点的时候选中节点                                                 | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | -                                                                                                                                                                                                                                  |
+| 35   | indent                                                  | 相邻级节点间的水平缩进，单位为像素                                           | Number                                 | 16                                                                                                                                                                                                                                                                                                                                                                                                      | -                                                                                                                                                                                                                                  |
+| 36   | icon-class                                              | 自定义树节点的图标                                                           | String                                 | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  |
+| 37   | draggable                                               | 是否开启拖拽节点功能                                                         | Boolean                                | false                                                                                                                                                                                                                                                                                                                                                                                                   | -                                                                                                                                                                                                                                  |
+| 38   | allow-drag                                              | 判断节点能否被拖拽                                                           | Function(node)                         | -                                                                                                                                                                                                                                                                                                                                                                                                       | -                                                                                                                                                                                                                                  |
+| 39   | allow-drop                                              | 拖拽时判定目标节点能否被放置                                                 | Function(draggingNode, dropNode, type) | -                                                                                                                                                                                                                                                                                                                                                                                                       | type 参数有三种情况：'prev'、'inner' 和 'next'，分别表示放置在目标节点前、插入至目标节点和放置在目标节点后                                                                                                                         |
+| 40   | checkStrictlyType                                       | 父子不关联的三种模式:authorization 授权模式,puppet 木偶模式 modular 积木模式 | String                                 | authorization:左侧选择子节点自动带着父节点；右侧选择父节点自动带着子节点；此模式两侧可能存在相同的非叶子节点;puppet:纯父子不关联穿梭，但要保持完整的树形结构，只自动带上穿梭到对面拼接所需的骨架结构；此模式两侧可能存在相同的非叶子节点;modular 纯父子不关联穿梭，也不保持完整的树形结构，像积木一样右侧要形成树形则需要把左侧拆除，左侧拆的越多右侧形成的树结构越完整；此模式左右两侧保证严格的唯一性 |
+
+> ---
+
+## 事件
+
+| 序号 | 事件名称           | 说明                                                  | 回调参数                                                                                                                                                                                                                               |
+| ---- | ------------------ | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | add-btn            | 点击添加按钮时触发的事件(2.4.0 以前为 addBtn)         | function(fromData,toData,obj),树形穿梭框 transfer 模式分别为 1.移动后左侧数据，2.移动后右侧数据，3.移动的节点 keys、nodes、halfKeys、halfNodes 对象；通讯录 addressList 模式时返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表 |
+| 2    | remove-btn         | 点击移除按钮时触发的事件(2.4.0 以前为 removeBtn)      | function(fromData,toData,obj),树形穿梭框 transfer 模式分别为 1.移动后左侧数据，2.移动后右侧数据，3.移动的节点 keys、nodes、halfKeys、halfNodes 对象；通讯录 addressList 模式时返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表 |
+| 3    | left-check-change  | 左侧源数据勾选事件                                    | function(nodeObj, treeObj, checkAll)见 el-tree 组件 check 事件返回值, 新增 checkAll 参数表示是否全部选中                                                                                                                               |
+| 4    | right-check-change | 右侧目标数据勾选事件                                  | function(nodeObj, treeObj, checkAll)见 el-tree 组件 check 事件返回值, 新增 checkAll 参数表示是否全部选中                                                                                                                               |
+| 5    | node-drag-start    | 节点开始拖拽时触发的事件                              | 共 3 个参数，依次为："left"/"right"、被拖拽节点对应的 Node、event                                                                                                                                                                      |
+| 6    | node-drag-enter    | 拖拽进入其他节点时触发的事件                          | 共 4 个参数，依次为："left"/"right"、被拖拽节点对应的 Node、所进入节点对应的 Node、event                                                                                                                                               |
+| 7    | node-drag-leave    | 拖拽离开某个节点时触发的事件                          | 共 4 个参数，依次为："left"/"right"、被拖拽节点对应的 Node、所离开节点对应的 Node、event                                                                                                                                               |
+| 8    | node-drag-over     | 在拖拽节点时触发的事件（类似浏览器的 mouseover 事件） | 共 4 个参数，依次为："left"/"right"、被拖拽节点对应的 Node、当前进入节点对应的 Node、event                                                                                                                                             |
+| 9    | node-drag-end      | 拖拽结束时（可能未成功）触发的事件                    | 共 5 个参数，依次为："left"/"right"、被拖拽节点对应的 Node、结束拖拽时最后进入的节点（可能为空）、被拖拽节点的放置位置（before、after、inner）、event                                                                                  |
+| 10   | node-drop          | 拖拽成功完成时触发的事件                              | 共 5 个参数，依次为："left"/"right"、被拖拽节点对应的 Node、结束拖拽时最后进入的节点、被拖拽节点的放置位置（before、after、inner）、event                                                                                              |
+
+> ---
+
+## 方法
+
+| 序号 | 名称         | 说明                                                                                                                |
+| ---- | ------------ | ------------------------------------------------------------------------------------------------------------------- |
+| 0    | addToAims    | 手动调用添加穿梭，用于调整初始数据默认穿梭 function(useCallBack: Boolean) 本次穿梭是否需要触发@add-btn 的 emit 回调 |
+| 1    | clearChecked | 清除选中节点，默认清除全部 function(type: String) left 左边 right 右边 all 全部 默认 all                            |
+| 2    | getChecked   | 获取选中数据                                                                                                        |
+| 3    | setChecked   | 设置选中数据 function(leftKeys = [], rightKeys = [])                                                                |
+| 4    | clearFilter  | 清除搜索框条件，默认清除全部 function(type: String) left 左边 right 右边 all 全部 默认 all                          |
+
+> ---
+
+## slot
+
+| 序号 | 名字          | 说明                             |
+| ---- | ------------- | -------------------------------- |
+| 1    | left-footer   | 穿梭框左侧、右侧底部 slot        |
+| 2    | right-footer  | 穿梭框左侧、右侧底部 slot        |
+| 3    | title-left    | 穿梭框标题区左侧、右侧自定义内容 |
+| 4    | title-right   | 穿梭框标题区左侧、右侧自定义内容 |
+| 5    | from          | 左侧内容区上部 slot              |
+| 7    | content-left  | 自定义左侧树节点                 |
+| 8    | content-right | 自定义右侧树节点                 |
+
+## 版本说明
+
+> 2.4.7 修复重构错误（请勿使用 2.4.0-2.4.5）；增加父子不关联的三种模式(其中完成授权模式)；调整组件目录结构；重构穿梭算法，demo 数据粗略测试性能提升较大；优化父子不关联时全选；修改事件 addBtn 为 add-btn，removeBtn 为 remove-btn；增加拖拽；增加自定义节点 slot；修复左右同时选中穿梭两次后的数据消失；搜索框增加清空；增加父子不关联穿梭功能
+
+> 2.3.3 更改判断穿梭目标是否已在对面存在的算法，避免原来 str 正则意外匹配结果（如 children 和 list 两个字段里都有这个 id，穿梭移除后，children 里的数据没了，list 里面数据还在，此时原来的匹配逻辑仍会任务目标已在对面存在而忽略穿梭）；增加`rootPidValue`字段，不再强制将根节点的 pid 都改为 0
+
+> 2.3.2 优化通讯录模式
+
+> 2.3.1 将外层对 el-tree 的 css 设定移入内层，消除 2.3.0 取消 css scoped 产生的影响
+
+> 2.3.0 取消 css scoped
+
+> 2.2.9 版本 lazy 属性只对左侧树生效，如果需要右侧也是用懒加载->lazyRight
+
+> 2.2.8 优化 defaultCheckedKeys 和 defaultTransfer 配合使用时，触发了添加事件的问题，通常默认第一次穿梭是后台偷懒没有生成 fromData 和 toData
+> 两份数据，需要前端拆分，此时再触发添加事件则务必要；另可不使用 defaultTransfer 而是在 defaultCheckedKeys 改变后手动调用 addToAims(false)函数，参数传 false 则不会触发 emit 回调
+
+> 2.2.6 增加`clearChecked`清空选中节点方法
+
+> 2.2.5 增加参数`defaultExpandedKeys`默认展开节点
+
+> 2.2.3 拆分自定义树节点函数`参数13 renderContent` 为 `renderContentLeft,renderContentRight`分别定义左右两侧自定义节点函数；增加`filterNode`函数来自定义搜索
+
+> 2.2.2 增加选中高亮参数
+
+> 2.2.1 增加 title 处的全选事件，具体参数说明见`事件3，事件4`
+
+> 2.2.0 增加 lazy 懒加载功能(非通讯录模式)，具体参数说明见`参数21, 参数22`
+
+> 2.1.2 增加通讯录模式的可配置项，但作为非主要维护模式灵活度仍较低，具体参数说明见`参数20`
+
+> 2.1.1 修复 array 数组模式选择根节点穿梭错误,废弃`leafOnly`参数，注意已经是树结构的不要使用 arrayToTree 参数
+
+> 2.1.0 增加 arrayTotree 参数，处理一维数组自动转化为所需树结构(详见参数 19,或 github-app.vue)；修复穿梭后半选节点残留的问题；去除部分不必要变量
+
+> 2.0.2 增加标题头部 slot 自定义内容区
+
+> 2.0.1 修复父子不关联问题。
+
+> 2.0.0 版本增加穿梭框左侧、右侧数据勾选事件，穿梭框左侧、右侧底部 slot。
+
+> 1.9.8 版本修复自定义按钮`button_text`的报错。
+
+> 1.9.7 版本增加`defaultTransfer`属性用来满足用户不想将数据拆分成 fromData 和 toData 的需求，增加`placeholder`属性。
+
+> 1.9.0 增强 id 既有数字又有字符型时的正则匹配强度。
+
+> 1.8.9 版本修复一个节点既是一侧的枝干节点又是另一侧的叶子节点时穿梭引起的重复错误！解决自定义节点名时筛选无效错误。
+
+> 1.8.8 版本增加`transferOpenNode`参数用来管理穿梭后是否展开节点，`defaultCheckedKeys`用来设置初始时默认展开节点。
+
+> 1.8.7 版本增加通讯录模式，可通过 mode 字段配置模式，mode 字段可选值为`transfer`|`addressList`。
+
+> 1.7.7 版本 `addBtn` 和 `removeBtn` 事件参数调整，返回三个参数，第一个参数是移动后的 fromData 数据，第二个参数是移动后的 toData 数据，第三个参数是{keys, nodes, harfKeys, harfNodes}对象。增加 `renderContent` 参数支持树节点自定义。
+
+> 1.6.7 版本增加`filter,openAll`参数，来设置是否开启筛选和是否默认展开全部
+
+> 1.5.9 版本增加`leafOnly`参数，来设置是否只返回树的末端叶子节点
+
+> 1.5.8 版本恢复上个版本莫名删掉的返回`nodes`的代码，如果您的项目只需要穿梭的 node-key 值则无需更新！道歉 ing。。。
+
+> 1.5.7 版本修复子组件异步数据有时不会更新的问题！修复了自定义参数名 node_key,children 时的一个错误，自动把第一层数据的 pid 替换为 0
+
+> 1.4.9 版本增加了添加和移除按钮的回调参数，function(keys,nodes)第一个参数为选中节点 node-key 值，第二个参数为选中节点 node
+
+> 1.4.8 版本修复了 id 为 number 类型时无法通过重复校验函数的问题，但仍然推荐 id 使用 string 型
+
+> 1.4.7 版本增加了`defaultProps`参数，`node_key`参数，`pid`参数，主要作用为可以自定义一些重要字段名，来提高数据灵活性，避免和后台因为字段名不同而被祭天
+
+> 1.3.7 版本取消了对 loadsh 库的依赖，此前仅用此库做某些深拷贝处理
+
+## 旧版文档【不再更新】
+
+1.  参数：`width` 说明：`宽度` 类型：`String` 必填：`false` 默认：`100%` 补充：`建议在外部盒子设定宽度和位置`
+
+2.  参数：`height` 说明：`高度` 类型：`String` 必填：`false` 默认：`320px`
+
+3.  参数：`title` 说明：`标题` 类型：`Array` 必填：`false` 默认：`["源列表", "目标列表"]`
+
+4.  参数：`button_text` 说明：`按钮名字` 类型：`Array` 必填：`false` 默认：`空`
+
+5.  参数：`from_data` 说明：`源数据` 类型：`Array` 必填：`true` 补充：`数据格式同element-ui tree组件，但必须有id和pid`
+
+6.  参数：`to_data` 说明：`目标数据` 类型：`Array` 必填：`true` 补充：`数据格式同element-ui tree组件，但必须有id和pid`
+
+7.  参数：`defaultProps` 说明：`配置项-同el-tree中props` 必填： `false` 补充：`用法和el-tree的props一样`
+
+8.  参数：`node_key` 说明：`自定义node-key的值，默认为id` 必填：`false` 补充：`必须与treedata数据内的id参数名一致，必须唯一`
+
+9.  参数：`pid` 说明：`自定义pid的参数名，默认为"pid"` 必填：`false` 补充：`有网友提出后台给的字段名不叫pid，因此增加自定义支持`
+
+10. --(废弃) 不建议使用！参数：`leafOnly` 说明：`是否只返回叶子节点` 类型：`Boolean` 必填：`false` 补充：`默认false，如果你只需要返回的末端子节点可使用此参数`
+
+11. 参数：`filter` 说明：`是否开启筛选功能` 类型：`Boolean` 必填：`false`
+
+12. 参数：`openAll` 说明：`是否默认展开全部` 类型：`Boolean` 必填：`false`
+
+13. 参数：`renderContent` 说明：`自定义树节点` 类型：`Function` 必填：`false` 补充：`用法同element-ui tree`
+
+14. 参数：`mode` 说明：`设置模式，字段可选值为transfer|addressList` 类型：`String` 必填：`false` 补充：`mode默认为transfer模式，即树形穿梭框模式，可配置字段为addressList改为通讯录模式，通讯录模式时按钮不可自定义名字，如要自定义标题名在title数组传入四个值即可，addressList模式时标题默认为通讯录、收件人、抄送人、密送人`
+
+15. 参数：`transferOpenNode` 说明：`穿梭后是否展开穿梭的节点` 类型：`Boolean` 必填：`false` 补充：`默认为true即展开穿梭的节点，便于视觉查看，增加此参数是因为数据量大时展开会有明显卡顿问题，但注意，如此参数设置为false则穿梭后不展开，毕竟无法确定第几层就会有庞大数据`
+
+16. 参数：`defaultCheckedKeys` 说明：`默认展开节点` 类型：`Array` 必填：`false` 补充：`只匹配初始时默认节点，不会在你操作后动态改变默认节点`
+
+17. 参数：`placeholder` 说明：`设置搜索框提示语` 类型：`String` 必填：`false` 补充：`默认为请输入关键词进行筛选`
+
+18. 参数：`defaultTransfer` 说明：`是否自动穿梭一次默认选中defaultCheckedKeys的节点` 类型：`Boolean` 必填：`false` 补充：`默认false，用来满足用户不想将数据拆分成fromData和toData的需求`
+
+19. 参数：`arrayToTree` 说明：`是否开启一维数组转化为树形结构` 类型：`Boolean` 必填：`false` 补充：`数据必须存在根节点，并且不会断节，数据格式详见github上app.vue，根据id、pid对应关系转化，存在一定的性能问题`
+
+20. 参数：`addressOptions` 说明：`通讯录模式配置项{num: Number, suffix: String, connector: String}` 类型：`Object` 必填：`false` 补充：`num-> 所需右侧通讯录个数,默认3 suffix-> label后想要拼接的字段（如id，即取此条数据的id拼接在后方）默认suffix connector -> 连接符（字符串）默认-`
+
+21. 参数：`lazy` 说明：`是否启用懒加载` 类型：`Boolean` 必填：`false` 补充：`默认false，效果动el-tree懒加载，不可和openAll或默认展开同时使用`
+
+22. 参数：`lazyFn` 说明：`懒加载的回调函数` 类型：`Function` 必填：`true` 补充：`当适用lazy时必须传入回调函数，示例:lazyFn='loadNode',返回参数loadNode(node, resolve, from), node->当前展开节点node，resolve->懒加载resolve，from -> left|right 表示回调来自左侧|右侧`
+
+23. 事件：`addBtn` 说明：`点击添加按钮时触发的事件` 回调参数：`function(fromData,toData,obj),树形穿梭框transfer模式分别为1.移动后左侧数据，2.移动后右侧数据，3.移动的节点keys、nodes、halfKeys、halfNodes对象；通讯录addressList模式时返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表`
+
+24. 事件：`removeBtn` 说明：`点击移除按钮时触发的事件` 回调参数：`function(fromData,toData,obj),树形穿梭框transfer模式分别为1.移动后左侧数据，2.移动后右侧数据，3.移动的节点keys、nodes、halfKeys、halfNodes对象；通讯录addressList模式时返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表`
+
+25. 事件：`left-check-change` 说明：`左侧源数据勾选事件` 回调参数：`function(nodeObj, treeObj, checkall)见el-tree组件check事件返回值,新增第三个参数表示是否全部选中`
+
+26. 事件：`right-check-change` 说明：`右侧目标数据勾选事件` 回调参数：`function(nodeObj, treeObj, checkall)见el-tree组件check事件返回值，新增第三个参数表示是否全部选中`
+
+27. Slot：`left-footer`, `right-footer` 说明：`穿梭框左侧、右侧底部slot`
+
+28. Slot: `title-left`, `title-right` 说明：`穿梭框标题区左侧、右侧自定义内容`
+
+## [GitHub demo 代码地址](https://github.com/hql7/tree-transfer) 欢迎 star 谢谢
+
+## 有好多有脾气的老哥找我给打赏，谢过 -->

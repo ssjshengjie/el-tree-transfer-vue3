@@ -1,0 +1,47 @@
+{
+  "name": "el-tree-transfer-vue3",
+  "version": "1.0.0",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/el-tree-transfer-vue3.es.ts",
+      "require": "./dist/el-tree-transfer-vue3.umd.ts"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
+  "keywords": [
+    "elementPlus",
+    "vue3",
+    "tree",
+    "transfer"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "element-plus": "^2.5.1",
+    "vue": "^3.4.14"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vue/compiler-sfc": "^3.4.14",
+    "sass": "^1.69.7",
+    "sass-loader": "^14.0.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vue-tsc": "^1.8.27"
+  },
+  "peerDependencies": {
+    "element-plus": "^2.5.1"
+  }
+}
